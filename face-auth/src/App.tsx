@@ -10,7 +10,6 @@ async function loadModels() {
   // ensure tf backend is available for face-api
   try {
     const tf = await import('@tensorflow/tfjs')
-    await import('@tensorflow/tfjs-backend-webgl')
     await tf.setBackend('webgl')
     await tf.ready()
     console.log('TensorFlow backend ready')
