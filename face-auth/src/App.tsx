@@ -6,10 +6,33 @@ import Login from './pages/Login'
 import Profile from './pages/Profile'
 
 async function loadModels() {
-  const MODEL_URL = '/models'
-  await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL)
-  await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
-  await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+  const BASE = '/models'
+  try {
+    console.log('Loading tinyFaceDetector from', `${BASE}/tiny_face_detector_model`)
+    await faceapi.nets.tinyFaceDetector.loadFromUri(`${BASE}/tiny_face_detector_model`)
+    console.log('Loaded tinyFaceDetector')
+  } catch (e) {
+    console.error('Failed loading tinyFaceDetector', e)
+    throw e
+  }
+
+  try {
+    console.log('Loading faceLandmark68Net from', `${BASE}/face_landmark_68_model`)
+    await faceapi.nets.faceLandmark68Net.loadFromUri(`${BASE}/face_landmark_68_model`)
+    console.log('Loaded faceLandmark68Net')
+  } catch (e) {
+    console.error('Failed loading faceLandmark68Net', e)
+    throw e
+  }
+
+  try {
+    console.log('Loading faceRecognitionNet from', `${BASE}/face_recognition_model`)
+    await faceapi.nets.faceRecognitionNet.loadFromUri(`${BASE}/face_recognition_model`)
+    console.log('Loaded faceRecognitionNet')
+  } catch (e) {
+    console.error('Failed loading faceRecognitionNet', e)
+    throw e
+  }
 }
 
 function App() {
