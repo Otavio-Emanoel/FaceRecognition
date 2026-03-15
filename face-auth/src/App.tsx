@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 let faceapi: any = null
-import FaceCamera from './components/FaceCamera'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
@@ -72,11 +71,11 @@ function App() {
     await new Promise((res) => (img.onload = res))
 
     const detection = await faceapi
-      .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
+      .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.35 }))
       .withFaceLandmarks()
       .withFaceDescriptor()
 
-    return detection?.descriptor ? Array.from(detection.descriptor) : null
+    return detection?.descriptor ? Array.from(detection.descriptor) as number[] : null
   }
 
   return (

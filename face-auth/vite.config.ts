@@ -29,5 +29,13 @@ export default defineConfig({
   server: {
     https: httpsConfig(),
     host: true,
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_TARGET || 'http://localhost:3333',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
 })
