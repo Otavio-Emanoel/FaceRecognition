@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import * as faceapi from 'face-api.js'
+import FaceCamera from './components/FaceCamera'
 
 async function loadModels() {
   const MODEL_URL = '/models'
@@ -12,119 +10,58 @@ async function loadModels() {
 }
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [modelsLoaded, setModelsLoaded] = useState(false)
+  const [capture, setCapture] = useState<string | null>(null)
+
   useEffect(() => {
-    loadModels().catch(console.error)
+    loadModels()
+      .then(() => setModelsLoaded(true))
+      .catch((err) => {
+        console.error('Failed to load face-api models', err)
+      })
   }, [])
 
+  async function handleCapture(dataUrl: string) {
+    setCapture(dataUrl)
+
+    try {
+      const img = new Image()
+      img.src = dataUrl
+      await new Promise((res) => (img.onload = res))
+
+      const detection = await faceapi
+        .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+        .withFaceDescriptor()
+
+      if (detection) {
+        console.log('Face descriptor:', detection.descriptor)
+      } else {
+        console.log('No face detected')
+      }
+    } catch (err) {
+      console.error('Error processing capture', err)
+    }
+  }
+
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <header>
+        <h1>Face Authentication</h1>
+        <p>{modelsLoaded ? 'Models loaded' : 'Loading models...'}</p>
+      </header>
 
-      <div className="ticks"></div>
+      <main>
+        <FaceCamera onCapture={handleCapture} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        {capture && (
+          <div className="preview">
+            <h3>last capture</h3>
+            <img src={capture} alt="capture" width={320} />
+          </div>
+        )}
+      </main>
+    </div>
   )
 }
 
