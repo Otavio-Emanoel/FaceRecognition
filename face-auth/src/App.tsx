@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import * as faceapi from 'face-api.js'
+let faceapi: any = null
 import FaceCamera from './components/FaceCamera'
 import Register from './pages/Register'
 import Login from './pages/Login'
@@ -7,6 +7,25 @@ import Profile from './pages/Profile'
 
 async function loadModels() {
   const BASE = '/models'
+  // ensure tf backend is available for face-api
+  try {
+    const tf = await import('@tensorflow/tfjs')
+    await import('@tensorflow/tfjs-backend-webgl')
+    await tf.setBackend('webgl')
+    await tf.ready()
+    console.log('TensorFlow backend ready')
+  } catch (err) {
+    console.error('Failed to load TensorFlow or set backend. Make sure @tensorflow/tfjs and @tensorflow/tfjs-backend-webgl are installed.', err)
+    throw err
+  }
+  // import face-api after tf is ready so it picks up the same backend
+  try {
+    const mod = await import('face-api.js')
+    faceapi = (mod && (mod.default || mod))
+  } catch (err) {
+    console.error('Failed to import face-api.js', err)
+    throw err
+  }
   try {
     console.log('Loading tinyFaceDetector from', `${BASE}/tiny_face_detector_model`)
     await faceapi.nets.tinyFaceDetector.loadFromUri(`${BASE}/tiny_face_detector_model`)
