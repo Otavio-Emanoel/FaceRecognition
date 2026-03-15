@@ -1,11 +1,11 @@
 import express from 'express'
 import cors from 'cors'
 
-const SQLiteUserRepository = require('./infrastructure/database/SQLiteUserRepository')
-const RegisterUser = require('./application/use-cases/RegisterUser')
-const LoginUser = require('./application/use-cases/LoginUser')
-const AuthController = require('./interfaces/controllers/AuthController')
-const authRoutes = require('./interfaces/routes/authRoutes').default
+import SQLiteUserRepository from './infrastructure/database/SQLiteUserRepository'
+import RegisterUser from './application/use-cases/RegisterUser'
+import LoginUser from './application/use-cases/LoginUser'
+import AuthController from './interfaces/controllers/AuthController'
+import authRoutes from './interfaces/routes/authRoutes'
 
 const app = express()
 app.use(cors())

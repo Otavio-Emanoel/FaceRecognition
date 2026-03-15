@@ -1,9 +1,8 @@
-class UserRepository {
-    async save(user: any) {
-        throw new Error('Method not implemented.')
-    }
+import User from '../entities/User'
 
-    async findAll() {
-        throw new Error('Method not implemented.')
-    }
+export interface IUserRepository {
+    save(user: User): Promise<User>
+    findAll(): Promise<User[]>
 }
+
+export default IUserRepository

@@ -13,5 +13,4 @@ class User {
         this.descriptor = descriptor;
     }
 }
-
-module.exports = User;
+export default User

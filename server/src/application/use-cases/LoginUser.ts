@@ -1,3 +1,6 @@
+import { IUserRepository } from '../../domain/repositories/UserRepository'
+import User from '../../domain/entities/User'
+
 function cosineSimilarity(vecA: number[], vecB: number[]) {
     let dot = 0
     let normA = 0
@@ -16,12 +19,14 @@ function cosineSimilarity(vecA: number[], vecB: number[]) {
 }
 
 class LoginUser {
-    constructor(userRepository: any) {
+    private userRepository: IUserRepository
+
+    constructor(userRepository: IUserRepository) {
         this.userRepository = userRepository
     }
 
-    async execute(descriptor: number[]) {
-        const users: any[] = await this.userRepository.findAll()
+    async execute(descriptor: number[]): Promise<User | null> {
+        const users: User[] = await this.userRepository.findAll()
 
         for (const user of users) {
             const similarity = cosineSimilarity(user.descriptor, descriptor)
@@ -34,4 +39,4 @@ class LoginUser {
     }
 }
 
-module.exports = LoginUser
+export default LoginUser
