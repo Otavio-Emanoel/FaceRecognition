@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
+import * as faceapi from 'face-api.js'
+
+async function loadModels() {
+  const MODEL_URL = '/models'
+  await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL)
+  await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
+  await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+}
 
 function App() {
   const [count, setCount] = useState(0)
+  useEffect(() => {
+    loadModels().catch(console.error)
+  }, [])
 
   return (
     <>
