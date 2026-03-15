@@ -6,6 +6,7 @@ export default function authRoutes(controller: AuthController) {
 
     router.post('/register', (req, res) => controller.register(req, res))
     router.post('/login', (req, res) => controller.login(req, res))
+    router.post('/login-credentials', (req, res) => controller.loginCredentials(req, res))
 
     return router
 }

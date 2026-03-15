@@ -37,6 +37,16 @@ class LoginUser {
 
         return null
     }
+
+    async executeByCredentials(email: string, password: string): Promise<User | null> {
+        const users: User[] = await this.userRepository.findAll()
+        for (const user of users) {
+            if (user.email === email && user.password === password) {
+                return user
+            }
+        }
+        return null
+    }
 }
 
 export default LoginUser

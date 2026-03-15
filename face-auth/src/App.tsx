@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import * as faceapi from 'face-api.js'
 import FaceCamera from './components/FaceCamera'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import Profile from './pages/Profile'
 
 async function loadModels() {
   const MODEL_URL = '/models'
@@ -11,7 +14,8 @@ async function loadModels() {
 
 function App() {
   const [modelsLoaded, setModelsLoaded] = useState(false)
-  const [capture, setCapture] = useState<string | null>(null)
+  const [route, setRoute] = useState<'home'|'register'|'login'|'profile'>('home')
+  const [user, setUser] = useState<any | null>(null)
 
   useEffect(() => {
     loadModels()
@@ -21,27 +25,17 @@ function App() {
       })
   }, [])
 
-  async function handleCapture(dataUrl: string) {
-    setCapture(dataUrl)
+  async function detectDescriptorFromDataUrl(dataUrl: string){
+    const img = new Image()
+    img.src = dataUrl
+    await new Promise((res) => (img.onload = res))
 
-    try {
-      const img = new Image()
-      img.src = dataUrl
-      await new Promise((res) => (img.onload = res))
+    const detection = await faceapi
+      .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptor()
 
-      const detection = await faceapi
-        .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
-        .withFaceLandmarks()
-        .withFaceDescriptor()
-
-      if (detection) {
-        console.log('Face descriptor:', detection.descriptor)
-      } else {
-        console.log('No face detected')
-      }
-    } catch (err) {
-      console.error('Error processing capture', err)
-    }
+    return detection?.descriptor ? Array.from(detection.descriptor) : null
   }
 
   return (
@@ -49,15 +43,37 @@ function App() {
       <header>
         <h1>Face Authentication</h1>
         <p>{modelsLoaded ? 'Models loaded' : 'Loading models...'}</p>
+        <nav>
+          <button onClick={() => setRoute('register')}>Register</button>
+          <button onClick={() => setRoute('login')}>Login</button>
+          <button onClick={() => setRoute('profile')} disabled={!user}>Profile</button>
+        </nav>
       </header>
 
       <main>
-        <FaceCamera onCapture={handleCapture} />
+        {route === 'register' && (
+          <Register
+            modelsLoaded={modelsLoaded}
+            detectDescriptor={detectDescriptorFromDataUrl}
+            onRegistered={(u: any) => { setUser(u); setRoute('profile') }}
+          />
+        )}
 
-        {capture && (
-          <div className="preview">
-            <h3>last capture</h3>
-            <img src={capture} alt="capture" width={320} />
+        {route === 'login' && (
+          <Login
+            modelsLoaded={modelsLoaded}
+            detectDescriptor={detectDescriptorFromDataUrl}
+            onLogged={(u: any) => { setUser(u); setRoute('profile') }}
+          />
+        )}
+
+        {route === 'profile' && user && (
+          <Profile user={user} onLogout={() => { setUser(null); setRoute('home') }} />
+        )}
+
+        {route === 'home' && (
+          <div>
+            <p>Escolha uma opção acima para começar.</p>
           </div>
         )}
       </main>

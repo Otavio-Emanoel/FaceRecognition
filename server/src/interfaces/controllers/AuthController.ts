@@ -55,4 +55,24 @@ export default class AuthController {
             res.status(500).json({ error: 'Failed to login user' })
         }
     }
+
+    async loginCredentials(req: Request, res: Response) {
+        const { email, password } = req.body as { email?: string; password?: string }
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required.' })
+        }
+
+        try {
+            const user = await this.loginUser.executeByCredentials(email, password)
+            if (user) {
+                res.status(200).json(user)
+            } else {
+                res.status(401).json({ error: 'Invalid credentials' })
+            }
+        } catch (error) {
+            console.error('Login credentials error:', error)
+            res.status(500).json({ error: 'Failed to login user' })
+        }
+    }
 }
