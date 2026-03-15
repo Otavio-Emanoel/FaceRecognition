@@ -24,6 +24,16 @@ app.get('/', (req, res) => {
   res.send({ status: 'ok' })
 })
 
+// Dev helper: list users (not for production)
+app.get('/debug/users', async (req, res) => {
+  try {
+    const users = await userRepository.findAll()
+    res.json(users)
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to read users from DB', details: String(err) })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })

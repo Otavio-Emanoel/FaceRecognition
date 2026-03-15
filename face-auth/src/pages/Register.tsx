@@ -33,21 +33,23 @@ export default function Register({ modelsLoaded, detectDescriptor, onRegistered 
   }
 
   return (
-    <div>
-      <h2>Register</h2>
-      <div>
-        <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+      <h2 className="text-2xl mb-4">Register</h2>
+      <div className="grid grid-cols-1 gap-3 mb-4">
+        <input className="p-2 border rounded" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <input className="p-2 border rounded" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input className="p-2 border rounded" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
 
-      <div>
-        <p>Capture face to register</p>
+      <div className="mb-4">
+        <p className="mb-2">Capture face to register</p>
         <FaceCamera onCapture={handleCapture} />
       </div>
 
-      {loading && <p>Processing...</p>}
-      {message && <p>{message}</p>}
+      <div className="flex items-center gap-4">
+        {loading && <p>Processing...</p>}
+        {message && <p className="text-sm text-red-500">{message}</p>}
+      </div>
     </div>
   )
 }

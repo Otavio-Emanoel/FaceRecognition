@@ -42,22 +42,27 @@ export default function Login({ modelsLoaded, detectDescriptor, onLogged }:
   }
 
   return (
-    <div>
-      <h2>Login</h2>
-      <div>
-        <h3>By credentials</h3>
-        <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button onClick={handleCredentials}>Login</button>
+    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+      <h2 className="text-2xl mb-4">Login</h2>
+
+      <div className="mb-4">
+        <h3 className="mb-2">By credentials</h3>
+        <div className="flex gap-2">
+          <input className="p-2 border rounded flex-1" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className="p-2 border rounded flex-1" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <button className="px-4 py-2 bg-indigo-600 text-white rounded" onClick={handleCredentials}>Login</button>
+        </div>
       </div>
 
       <div>
-        <h3>Or by face</h3>
+        <h3 className="mb-2">Or by face</h3>
         <FaceCamera onCapture={handleFaceCapture} />
       </div>
 
-      {loading && <p>Processing...</p>}
-      {message && <p>{message}</p>}
+      <div className="mt-4">
+        {loading && <p>Processing...</p>}
+        {message && <p className="text-sm text-red-500">{message}</p>}
+      </div>
     </div>
   )
 }

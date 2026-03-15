@@ -40,14 +40,18 @@ function App() {
 
   return (
     <div className="app">
-      <header>
-        <h1>Face Authentication</h1>
-        <p>{modelsLoaded ? 'Models loaded' : 'Loading models...'}</p>
-        <nav>
-          <button onClick={() => setRoute('register')}>Register</button>
-          <button onClick={() => setRoute('login')}>Login</button>
-          <button onClick={() => setRoute('profile')} disabled={!user}>Profile</button>
-        </nav>
+      <header className="bg-white dark:bg-gray-800 border-b py-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between px-4">
+          <div>
+            <h1 className="text-2xl font-semibold">Face Authentication</h1>
+            <p className="text-sm text-gray-500">{modelsLoaded ? 'Models loaded' : 'Loading models...'}</p>
+          </div>
+          <nav className="flex gap-2">
+            <button className="px-3 py-2 rounded bg-transparent hover:bg-gray-100" onClick={() => setRoute('register')}>Register</button>
+            <button className="px-3 py-2 rounded bg-transparent hover:bg-gray-100" onClick={() => setRoute('login')}>Login</button>
+            <button className="px-3 py-2 rounded bg-transparent hover:bg-gray-100" onClick={() => setRoute('profile')} disabled={!user}>Profile</button>
+          </nav>
+        </div>
       </header>
 
       <main>
