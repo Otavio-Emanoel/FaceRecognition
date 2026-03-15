@@ -1,5 +1,5 @@
 class UserRepository {
-    async save() {
+    async save(user: any) {
         throw new Error('Method not implemented.')
     }
 
