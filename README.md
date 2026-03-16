@@ -2,6 +2,8 @@
 
 Projeto de demonstração de autenticação por reconhecimento facial e credenciais.
 
+![App Screenshot](./face-auth/public/preview.jpeg)
+
 Conteúdo
 - `face-auth/`: frontend React + Vite que usa `face-api.js` para capturar e extrair descriptors faciais.
 - `server/`: backend Node (Express) em TypeScript, sqlite para armazenar usuários.
